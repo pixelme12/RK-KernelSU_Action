@@ -1,9 +1,11 @@
 name: Build Kernel
 
-on:
-  workflow_dispatch:
+on: 
+  push:
+  schedule:
+    - cron: '0 1 * * *'
 
-    inputs:
+inputs:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
