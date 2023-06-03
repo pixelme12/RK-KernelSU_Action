@@ -2,8 +2,7 @@ name: Build Kernel
 
 on:
   workflow_dispatch:
-  
-inputs:
+    inputs:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
