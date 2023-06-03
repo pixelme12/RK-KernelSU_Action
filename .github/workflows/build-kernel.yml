@@ -14,7 +14,7 @@ on:
       KERNEL_DEFCONFIG:
         description: 'Defconfig'
         required: true
-        default: 'umi_stock-defconfig'
+        default: 'umi_defconfig'
       TARGET_ARCH:
         description: 'Target ARCH'
         required: true
