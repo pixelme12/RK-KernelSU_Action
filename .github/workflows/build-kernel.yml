@@ -77,8 +77,11 @@ jobs:
     - name: Download Clang Toolchain
       run: |
         mkdir clang
-        wget -q ${{ env.CLANG_URL }} -O clang.tar.gz
-        tar -C clang/ -zxf clang.tar.gz
+        git clone https://github.com/CoolestEnoch/kernel-su-xiaomi-cas
+        mv kernel-su-xiaomi-cas/gcc/ ./clang
+        rm -rf kernel-su-xiaomi-cas
+        #wget -q ${{ env.CLANG_URL }} -O clang.tar.gz
+        #tar -C clang/ -zxf clang.tar.gz
 
     - name: Checkout Kernel Source
       uses: actions/checkout@v3
@@ -117,11 +120,11 @@ jobs:
         cd android-kernel
         export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
         export ARCH=${{ env.TARGET_ARCH }}
-        export SUBARCH=${{ env.TARGET_ARCH }}
-        export KBUILD_COMPILER_STRING="$(clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
+        #export SUBARCH=${{ env.TARGET_ARCH }}
+        #export KBUILD_COMPILER_STRING="$(clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
         export KBUILD_BUILD_HOST=GitHub-Action
         export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
-        make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang ${{ env.KERNEL_DEFCONFIG }}
+        make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} ${{ env.KERNEL_DEFCONFIG }}
 
     #- name: SSH connection to Actions
     #  uses: P3TERX/ssh2actions@v1.0.0
@@ -132,14 +135,15 @@ jobs:
         cd android-kernel
         export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
         export ARCH=${{ env.TARGET_ARCH }}
-        export SUBARCH=${{ env.TARGET_ARCH }}
-        export KBUILD_COMPILER_STRING="$(clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
+        #export SUBARCH=${{ env.TARGET_ARCH }}
+        #export KBUILD_COMPILER_STRING="$(clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
         export KBUILD_BUILD_HOST=GitHub-Action
         export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
         make -j$(nproc --all) O=out ARCH=arm64 savedefconfig
         cp -f out/defconfig arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
-        make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
-
+        #make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang CROSS_COMPILE=aarch64-linux-gnu- ${{ env.BUILD_EXTRA_COMMAND }}
+        make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CROSS_COMPILE=$(pwd)/clang/gcc-arm64-gcc-master/bin/aarch64-elf- CROSS_COMPILE_ARM32=$(pwd)/clang/gcc-arm-gcc-master/bin/arm-eabi-
+        
     - name: Check the kernel output files
       run: |
        if [ -f android-kernel/out/arch/${{ env.TARGET_ARCH }}/boot/${{ env.KERNEL_FILE }} ] ; then
