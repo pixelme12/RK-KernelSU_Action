@@ -6,15 +6,15 @@ on:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
-        default: 'Rohail33/Realking_kernel_sm8250'
+        default: 'ZenkaBestia/kernel_xiaomi_lmi'
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: 'base'
+        default: 'LA.UM.9.12.r1-XXXX-SMxx50.QSSI12.0-new'
       KERNEL_DEFCONFIG:
         description: 'Defconfig'
         required: true
-        default: 'umi_defconfig'
+        default: 'umi_user_defconfig'
       TARGET_ARCH:
         description: 'Target ARCH'
         required: true
@@ -41,11 +41,11 @@ on:
         required: true
         default: 'true'
         type: boolean
-      SSH:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
-        type: boolean
+      #SSH:
+      #  description: 'SSH connection to Actions'
+      #  required: false
+      #  default: 'false'
+      #  type: boolean
 
 jobs:
   build:
@@ -96,9 +96,9 @@ jobs:
         rm -rf ./KernelSU
         rm -rf ./drivers/kernelsu
         if [ ${{ env.USE_KPROBES }} = true ] ; then
-            echo "CONFIG_MODULES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
+            #echo "CONFIG_MODULES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
             echo "CONFIG_KPROBES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
-            echo "CONFIG_HAVE_KPROBES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
+            #echo "CONFIG_HAVE_KPROBES=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
             echo "CONFIG_KPROBE_EVENTS=y" >> arch/${{ env.TARGET_ARCH }}/configs/${{ env.KERNEL_DEFCONFIG }}
             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
             echo "UPLOADNAME=-KernelSU" >> $GITHUB_ENV
@@ -123,9 +123,9 @@ jobs:
         export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
         make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang ${{ env.KERNEL_DEFCONFIG }}
 
-    - name: SSH connection to Actions
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: env.SSH == 'true'
+    #- name: SSH connection to Actions
+    #  uses: P3TERX/ssh2actions@v1.0.0
+    #  if: env.SSH == 'true'
 
     - name: Build kernel
       run: |
