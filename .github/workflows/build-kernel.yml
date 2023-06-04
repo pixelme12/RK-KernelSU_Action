@@ -84,7 +84,7 @@ jobs:
     - name: Download Clang Toolchain
       run: |
         #cd android-kernel
-        BASE_DIR=$GITHUB_WORKSPACE/android-kernel"
+        BASE_DIR=$(pwd)/android-kernel"
         TOOLCHAIN_DIR="$BASE_DIR/Toolchains"
         CLANG_DIR="$TOOLCHAIN_DIR/clang"
         GCC_DIR="$TOOLCHAIN_DIR/gcc"
