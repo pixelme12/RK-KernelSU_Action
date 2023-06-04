@@ -6,15 +6,15 @@ on:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
-        default: 'ZenkaBestia/kernel_xiaomi_lmi'
+        default: 'lsilencej/White-Wolf-UMI-UNI-KernelSU'
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: 'LA.UM.9.12.r1-XXXX-SMxx50.QSSI12.0-new'
+        default: 'LA.UM.9.12.r1-XXXX-SMxx50.QSSI13.0'
       KERNEL_DEFCONFIG:
         description: 'Defconfig'
         required: true
-        default: 'umi_user_defconfig'
+        default: 'lsilencej_umi_defconfig'
       TARGET_ARCH:
         description: 'Target ARCH'
         required: true
