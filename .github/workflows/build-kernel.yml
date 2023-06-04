@@ -30,7 +30,7 @@ on:
       BUILD_EXTRA_COMMAND:
         description: 'Extra build commands(e.g. LLVM=1 LLVM_IAS=1)'
         required: false
-        default: 'NM=llvm-nm OBJDUMP=llvm-objdump STRIP=llvm-strip'
+        default: 'AR=llvm-ar OBJCOPY=llvm-objcopy NM=llvm-nm OBJDUMP=llvm-objdump STRIP=llvm-strip LD=ld.lld'
       USE_KPROBES:
         description: 'Use Kprobes'
         required: true
