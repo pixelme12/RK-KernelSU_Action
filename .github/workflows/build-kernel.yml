@@ -130,13 +130,17 @@ jobs:
     - name: Generate kernel configuration
       run: |
         cd android-kernel
-        export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
+        CLANG_REVISION="clang-r450784e"
+        TOOLCHAIN_DIR="$BASE_DIR/Toolchains"
+        CLANG_DIR="$TOOLCHAIN_DIR/clang/$CLANG_REVISION/bin"
+        GCC_DIR="$TOOLCHAIN_DIR/gcc/bin"
+        export PATH=$CLANG_DIR/$CLANG_REVISION/bin:$PATH
         export ARCH=${{ env.TARGET_ARCH }}
         #export SUBARCH=${{ env.TARGET_ARCH }}
         #export KBUILD_COMPILER_STRING="$(clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
         export KBUILD_BUILD_HOST=GitHub-Action
         export KBUILD_BUILD_USER=$(echo ${{ github.actor }} | tr A-Z a-z)
-        make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} ${{ env.KERNEL_DEFCONFIG }}
+        make -j$(nproc --all) O=out ARCH=${{ env.TARGET_ARCH }} CC=clang ${{ env.KERNEL_DEFCONFIG }}
 
     #- name: SSH connection to Actions
     #  uses: P3TERX/ssh2actions@v1.0.0
